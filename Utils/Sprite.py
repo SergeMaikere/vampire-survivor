@@ -1,4 +1,4 @@
-import pygame
+from settings import *
 from pygame.sprite import Group
 
 class Sprite ( pygame.sprite.Sprite ):

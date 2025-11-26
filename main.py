@@ -26,7 +26,7 @@ class Game ():
 		for event in pygame.event.get():
 			self.running = not self.__time_to_quit(event)
 
-	def start ( self ):
+	def run ( self ):
 		while self.running:
 			dt = self.clock.tick(60) / 1000
 
@@ -43,6 +43,6 @@ class Game ():
 		pygame.quit()
 
 
-
-new_game = Game('Vampire Survivor II: Back for Blood!')
-new_game.start()
+if __name__ == '__main__':
+	new_game = Game('Vampire Survivor II: Back for Blood!')
+	new_game.run()

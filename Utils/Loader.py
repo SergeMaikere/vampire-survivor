@@ -1,7 +1,6 @@
+from settings import *
 from typing import Callable
-import pygame
 from pygame.surface import Surface
-from os.path import join
 from Utils.Helper import pipe
 
 
