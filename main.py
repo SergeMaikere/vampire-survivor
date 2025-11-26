@@ -1,5 +1,6 @@
 from pygame import Event
 from Entities.Player import Player
+from Utils.Loader import load_map, make_tile, make_obj
 from settings import *
 
 class Game ():
@@ -11,13 +12,8 @@ class Game ():
 		self.clock = pygame.time.Clock()
 		self.screen_image = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 		self.all_sprites = pygame.sprite.Group()
-
-		self.player = Player(self.all_sprites, center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
-
 		self.running = True
 
-	def __set_background_color ( self, color: tuple ) -> None:
-			self.screen_image.fill(color)
 
 	def __time_to_quit ( self, event: Event ):
 		return event.type == pygame.QUIT
@@ -26,13 +22,21 @@ class Game ():
 		for event in pygame.event.get():
 			self.running = not self.__time_to_quit(event)
 
+	def __setup_map ( self ):
+		maps = load_map(join('assets', 'data', 'maps', 'world.tmx'))
+		tiles = [ make_tile(self.all_sprites, x, y, image) for x, y, image in maps.get_layer_by_name('Ground').tiles() ]
+		objects = [ make_obj(self.all_sprites, obj) for obj in maps.get_layer_by_name('Objects') ]
+
 	def run ( self ):
+
+		self.__setup_map()
+		self.player = Player(self.all_sprites, center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
+
 		while self.running:
 			dt = self.clock.tick(60) / 1000
 
 			self.__event_loop()
 
-			self.__set_background_color((0, 0, 0))
 
 			self.all_sprites.update(dt)
 

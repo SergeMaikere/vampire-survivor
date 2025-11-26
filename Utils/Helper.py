@@ -1,7 +1,9 @@
+from types import FunctionType
+from typing import Any, Callable, Iterable
 from settings import *
 from functools import reduce
 from inspect import signature
-from numpy import random
+from numpy import iterable, random
 import pygame
 
 pipe = lambda *funcs: lambda arg: reduce( lambda g, f: f(g), funcs, arg )
