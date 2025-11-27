@@ -10,8 +10,12 @@ from pytmx.util_pygame import load_pygame
 
 load_image: Callable[ [str], Surface ] = lambda filename: pygame.image.load( join('assets', 'images', 'player', 'right', filename) )
 
+load_animation_image: Callable[ [str, int], Surface ] = lambda path, n: pygame.image.load(join(path, f'{n}.png'))
+
 convert_image: Callable[ [Surface, bool], Surface ] = lambda image, alpha=True: image.convert_alpha() if alpha else image.convert()
 
 image_loader: Callable[ [str], Surface ] = pipe( load_image, convert_image )
 
 load_map: Callable[ [str], TiledMap ] = lambda layer: load_pygame(layer)
+
+
