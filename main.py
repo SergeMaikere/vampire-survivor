@@ -1,6 +1,10 @@
+from typing import Any
 from pygame import Event
+from pytmx import TiledMap
 from Entities.Player import Player
-from Utils.Loader import load_map, make_tile, make_obj, make_collision_rect
+from Utils.Sprite import Sprite
+from Utils.Helper import pipe
+from Utils.Loader import load_map
 from settings import *
 
 class Game ():
@@ -14,7 +18,7 @@ class Game ():
 		self.all_sprites = pygame.sprite.Group()
 		self.collision_sprites = pygame.sprite.Group()
 
-		self.give_me = { 'collision_sprites': self.collision_sprites }
+		self.give_me: dict[str, Any] = { 'collision_sprites': self.collision_sprites }
 		self.running = True
 
 
@@ -25,20 +29,31 @@ class Game ():
 		for event in pygame.event.get():
 			self.running = not self.__time_to_quit(event)
 
-	def __setup_map ( self ):
-		maps = load_map(join('assets', 'data', 'maps', 'world.tmx'))
-
+	def __make_ground ( self, maps: TiledMap ):
 		for x, y, image in maps.get_layer_by_name('Ground').tiles():
-			make_tile(self.all_sprites, x, y, image)
+			Sprite( self.all_sprites, image, topleft=(x * TILE_SIZE, y * TILE_SIZE) )
+		return maps
 
+	def __make_objects ( self, maps: TiledMap):
 		for obj in maps.get_layer_by_name('Objects'):
-			make_obj((self.all_sprites, self.collision_sprites), obj)
+			Sprite( (self.all_sprites, self.collision_sprites), obj.image, topleft=(obj.x, obj.y) )
+		return maps
 
-		for wall in maps.get_layer_by_name('Collisions'):
-			make_collision_rect((self.all_sprites, self.collision_sprites), wall )
+	def __make_invisible_walls ( self, maps: TiledMap ):
+		for obj in maps.get_layer_by_name('Collisions'):
+			Sprite( self.collision_sprites, pygame.Surface((obj.width, obj.height)), topleft=(obj.x, obj.y) )
+		return maps
+
+
+	def __setup_map ( self ):
+		return pipe(
+			self.__make_ground,
+			self.__make_objects,
+			self.__make_invisible_walls
+		)(load_map(join('assets', 'data', 'maps', 'world.tmx')))
+
 
 	def run ( self ):
-
 		self.__setup_map()
 		self.player = Player(self.all_sprites)
 

@@ -1,4 +1,5 @@
-from pygame import Surface
+from typing import cast
+from pygame import FRect, Surface
 from settings import *
 from pygame.sprite import Group
 
