@@ -4,8 +4,8 @@ from Utils.Sprite import Sprite
 from Utils.Loader import image_loader
 
 class Player ( Sprite ):
-	def __init__( self, group: Group, **anchor ):
-		super().__init__(group, image_loader('0.png'), **anchor)
+	def __init__( self, group: Group ):
+		super().__init__(group, image_loader('0.png'), center=(200, 200))
 
 		self.direction = pygame.Vector2()
 		self.speed = 500

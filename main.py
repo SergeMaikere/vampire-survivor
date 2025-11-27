@@ -1,7 +1,6 @@
 from pygame import Event
 from Entities.Player import Player
-from Utils.Loader import load_map, make_tile, make_obj
-from Utils.Helper import curry, foreach, pipe
+from Utils.Loader import load_map, make_tile, make_obj, make_collision_rect
 from settings import *
 
 class Game ():
@@ -35,10 +34,13 @@ class Game ():
 		for obj in maps.get_layer_by_name('Objects'):
 			make_obj((self.all_sprites, self.collision_sprites), obj)
 
+		for wall in maps.get_layer_by_name('Collisions'):
+			make_collision_rect((self.all_sprites, self.collision_sprites), wall )
+
 	def run ( self ):
 
 		self.__setup_map()
-		self.player = Player(self.all_sprites, center=(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
+		self.player = Player(self.all_sprites)
 
 		while self.running:
 			self.give_me['dt'] = self.clock.tick(60) / 1000

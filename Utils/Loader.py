@@ -19,3 +19,8 @@ load_map: Callable[ [str], TiledMap ] = lambda layer: load_pygame(layer)
 make_tile: Callable[ [Group | tuple[Group, ...], float, float, Surface], Sprite ] = lambda group, x, y, image : Sprite(group, image, topleft=(x * TILE_SIZE, y * TILE_SIZE))
 
 make_obj: Callable[ [Group | tuple[Group, ...], TiledObject], Sprite ] = lambda group, obj : Sprite(group, obj.image, topleft=(obj.x, obj.y))
+
+def make_collision_rect ( group: Group | tuple[Group, ...], obj: TiledObject ):
+	image = pygame.surface.Surface((obj.width, obj.height))
+	image.set_colorkey('black')
+	return Sprite(group, image, topleft=(obj.x, obj.y))
