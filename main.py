@@ -18,7 +18,12 @@ class Game ():
 		self.all_sprites = pygame.sprite.Group()
 		self.collision_sprites = pygame.sprite.Group()
 
-		self.give_me: dict[str, Any] = { 'collision_sprites': self.collision_sprites }
+		self.give_me: dict[str, Any] = { 
+			'groups': {
+				'all_sprites': self.all_sprites, 
+				'collision_sprites': self.collision_sprites
+			}
+		}
 		self.running = True
 
 
