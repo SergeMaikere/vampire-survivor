@@ -8,8 +8,8 @@ from Utils.Loader import PLAYER_ANIMS_PATHS, get_frames, image_loader
 from Animations.Animation import Animation
 
 class Player ( Sprite ):
-	def __init__( self, group: Group ):
-		super().__init__(group, image_loader(join(*PLAYER_ANIMS_PATHS['RIGHT']), '0.png'), center=(200, 200))
+	def __init__( self, group: Group, pos: tuple[float, float] ):
+		super().__init__(group, image_loader(join(*PLAYER_ANIMS_PATHS['UP']), '0.png'), center=pos)
 
 		self.hitbox_rect = self.rect.inflate(-80, 0)
 		self.direction = pygame.Vector2()
@@ -41,7 +41,7 @@ class Player ( Sprite ):
 		self.direction = self.direction.normalize() if self.direction else self.direction
 
 	def __set_animation ( self, dt: float, frames: list[Surface] ):
-		self.frames_i += int(dt * 2) or 1
+		self.frames_i += int(dt) or 1
 		if self.frames_i >= len(frames): self.frames_i = 0
 		self.image = frames[self.frames_i]
 
