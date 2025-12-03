@@ -2,6 +2,7 @@ from typing import Any
 from pygame import Event
 from pytmx import TiledMap
 from Entities.Player import Player
+from Utils.All_Sprites import All_Sprites
 from Utils.Sprite import Sprite
 from Utils.Helper import pipe
 from Utils.Loader import load_map
@@ -12,10 +13,10 @@ class Game ():
 	def __init__( self ) -> None:
 		pygame.init()
 		pygame.display.set_caption('Vampire Survivor II: Back for Blood!')
-
+     
 		self.clock = pygame.time.Clock()
 		self.screen_image = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-		self.all_sprites = pygame.sprite.Group()
+		self.all_sprites = All_Sprites()
 		self.collision_sprites = pygame.sprite.Group()
 
 		self.give_me: dict[str, Any] = { 
@@ -49,27 +50,36 @@ class Game ():
 			Sprite( self.collision_sprites, pygame.Surface((obj.width, obj.height)), topleft=(obj.x, obj.y) )
 		return maps
 
+	def __make_player ( self, obj ):
+		if not obj.name == 'Player': return obj
+		self.player = Player(self.all_sprites, (obj.x, obj.y))
+
+	def __make_entitites ( self, maps: TiledMap ):
+		for obj in maps.get_layer_by_name('Entities'): #type ignore
+			self.__make_player(obj)
+		return maps
+
 
 	def __setup_map ( self ):
 		return pipe(
 			self.__make_ground,
 			self.__make_objects,
-			self.__make_invisible_walls
+			self.__make_invisible_walls,
+			self.__make_entitites
 		)(load_map(join('assets', 'data', 'maps', 'world.tmx')))
 
 
 	def run ( self ):
 		self.__setup_map()
-		self.player = Player(self.all_sprites)
 
 		while self.running:
-			self.give_me['dt'] = self.clock.tick(60) / 1000
+			self.give_me['dt'] = self.clock.tick() / 1000
 
 			self.__event_loop()
 
 			self.all_sprites.update(self.give_me)
 
-			self.all_sprites.draw(self.screen_image)
+			self.all_sprites.draw(self.player.rect.center)
 
 			pygame.display.update()
 
