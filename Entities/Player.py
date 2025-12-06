@@ -41,7 +41,7 @@ class Player ( Sprite ):
 		self.direction = self.direction.normalize() if self.direction else self.direction
 
 	def __set_animation ( self, dt: float, frames: list[Surface] ):
-		self.frames_i += int(dt) or 1
+		self.frames_i += int(dt * 65)
 		if self.frames_i >= len(frames): self.frames_i = 0
 		self.image = frames[self.frames_i]
 

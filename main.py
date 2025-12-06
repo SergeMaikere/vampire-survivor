@@ -13,7 +13,7 @@ class Game ():
 	def __init__( self ) -> None:
 		pygame.init()
 		pygame.display.set_caption('Vampire Survivor II: Back for Blood!')
-
+     
 		self.clock = pygame.time.Clock()
 		self.screen_image = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 		self.all_sprites = All_Sprites()
@@ -73,7 +73,7 @@ class Game ():
 		self.__setup_map()
 
 		while self.running:
-			self.give_me['dt'] = self.clock.tick(60) / 1000
+			self.give_me['dt'] = self.clock.tick() / 1000
 
 			self.__event_loop()
 
