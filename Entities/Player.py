@@ -4,7 +4,7 @@ from pygame.key import ScancodeWrapper
 from settings import *
 from pygame.sprite import Group
 from Utils.Sprite import Sprite
-from Utils.Loader import PLAYER_ANIMS_PATHS, get_frames, image_loader
+from Utils.Loader import PLAYER_ANIMS_PATHS, get_frame, image_loader
 from Animations.Animation import Animation
 
 class Player ( Sprite ):
@@ -16,10 +16,13 @@ class Player ( Sprite ):
 		self.speed = 500
 
 		self.frames_i = 0
-		self.frames_go_right = get_frames(PLAYER_ANIMS_PATHS['RIGHT'], 4)
-		self.frames_go_left = get_frames(PLAYER_ANIMS_PATHS['LEFT'], 4)
-		self.frames_go_up = get_frames(PLAYER_ANIMS_PATHS['UP'], 4)
-		self.frames_go_down = get_frames(PLAYER_ANIMS_PATHS['DOWN'], 4)
+		self.frames = self.__make_player_frames()
+
+	def __make_player_frames ( self ):
+		frames = {}
+		for root, _directories, files in walk( join('assets', 'images', 'player') ):
+			if files: frames[root.split('\\').pop()] = [ get_frame(root, file) for file in files ]
+		return frames
 
 
 	def __collision_handler ( self, collision_sprites: Group, direction: str ):
@@ -46,10 +49,10 @@ class Player ( Sprite ):
 		self.image = frames[self.frames_i]
 
 	def __lauch_animation ( self, dt: float ):
-		if self.direction.x > 0: self.__set_animation(dt, self.frames_go_right)
-		if self.direction.x < 0: self.__set_animation(dt, self.frames_go_left)
-		if self.direction.y > 0: self.__set_animation(dt, self.frames_go_down)
-		if self.direction.y < 0: self.__set_animation(dt, self.frames_go_up)
+		if self.direction.x > 0: self.__set_animation(dt, self.frames['right'])
+		if self.direction.x < 0: self.__set_animation(dt, self.frames['left'])
+		if self.direction.y > 0: self.__set_animation(dt, self.frames['down'])
+		if self.direction.y < 0: self.__set_animation(dt, self.frames['up'])
 
 	def __move ( self, dt: float, collision_sprites: Group ):
 		self.hitbox_rect.x += self.direction.x * self.speed * dt

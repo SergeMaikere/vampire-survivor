@@ -55,7 +55,7 @@ class Game ():
 		self.player = Player(self.all_sprites, (obj.x, obj.y))
 
 	def __make_entitites ( self, maps: TiledMap ):
-		for obj in maps.get_layer_by_name('Entities'): #type ignore
+		for obj in maps.get_layer_by_name('Entities'): 
 			self.__make_player(obj)
 		return maps
 
