@@ -19,7 +19,7 @@ class Player ( Sprite ):
 		self.frames_i = 0
 		self.frames = self.__make_player_frames()
 
-	def __make_player_frames ( self ):
+	def __make_player_frames ( self ) -> dict[str, list[Surface]]:
 		frames = {}
 		for root, _directories, files in walk( join('assets', 'images', 'player') ):
 			if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
@@ -68,8 +68,7 @@ class Player ( Sprite ):
 
 
 	def update ( self, give_me: dict[str, Any] ):
-		keys = pygame.key.get_pressed()
-		self.__set_direction(keys)
+		self.__set_direction(pygame.key.get_pressed())
 		self.__set_state()
 		self.__animate(give_me['dt'])
 		self.__on_collide(give_me['dt'], give_me['groups']['collision_sprites'])
