@@ -4,6 +4,7 @@ from pytmx import TiledMap
 from Entities.Player import Player
 from Utils.All_Sprites import All_Sprites
 from Utils.Sprite import Sprite
+from Utils.Ground import Ground
 from Utils.Helper import pipe
 from Utils.Loader import load_map
 from settings import *
@@ -37,7 +38,7 @@ class Game ():
 
 	def __make_ground ( self, maps: TiledMap ):
 		for x, y, image in maps.get_layer_by_name('Ground').tiles():
-			Sprite( self.all_sprites, image, topleft=(x * TILE_SIZE, y * TILE_SIZE) )
+			Ground( self.all_sprites, image, topleft=(x * TILE_SIZE, y * TILE_SIZE) )
 		return maps
 
 	def __make_objects ( self, maps: TiledMap):

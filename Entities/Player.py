@@ -1,17 +1,17 @@
+from settings import *
 from typing import Any
 from pygame import Surface
 from pygame.key import ScancodeWrapper
-from settings import *
 from pygame.sprite import Group
 from Utils.Sprite import Sprite
-from Utils.Loader import PLAYER_ANIMS_PATHS, get_frame, image_loader
-from Animations.Animation import Animation
+from Utils.Helper import split_path
+from Utils.Loader import get_frame, image_loader
 
 class Player ( Sprite ):
 	def __init__( self, group: Group, pos: tuple[float, float] ):
-		super().__init__(group, image_loader(join(*PLAYER_ANIMS_PATHS['UP']), '0.png'), center=pos)
+		super().__init__(group, image_loader(join('assets', 'images', 'player', 'down'), '0.png'), center=pos)
 
-		self.hitbox_rect = self.rect.inflate(-80, 0)
+		self.hitbox_rect = self.rect.inflate(-60, -90)
 		self.direction = pygame.Vector2()
 		self.speed = 500
 
@@ -21,7 +21,7 @@ class Player ( Sprite ):
 	def __make_player_frames ( self ):
 		frames = {}
 		for root, _directories, files in walk( join('assets', 'images', 'player') ):
-			if files: frames[root.split('\\').pop()] = [ get_frame(root, file) for file in files ]
+			if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
 		return frames
 
 

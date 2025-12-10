@@ -9,3 +9,4 @@ class Sprite ( pygame.sprite.Sprite ):
 		self._og_image = image
 		self.image = self._og_image.copy()
 		self.rect = self.image.get_frect(**anchor)
+
