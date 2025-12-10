@@ -15,6 +15,7 @@ class Player ( Sprite ):
 		self.direction = pygame.Vector2()
 		self.speed = 500
 
+		self.state = 'down'
 		self.frames_i = 0
 		self.frames = self.__make_player_frames()
 
@@ -43,28 +44,33 @@ class Player ( Sprite ):
 		self.direction.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
 		self.direction = self.direction.normalize() if self.direction else self.direction
 
-	def __set_animation ( self, dt: float, frames: list[Surface] ):
-		self.frames_i += int(dt * 65)
-		if self.frames_i >= len(frames): self.frames_i = 0
-		self.image = frames[self.frames_i]
 
-	def __lauch_animation ( self, dt: float ):
-		if self.direction.x > 0: self.__set_animation(dt, self.frames['right'])
-		if self.direction.x < 0: self.__set_animation(dt, self.frames['left'])
-		if self.direction.y > 0: self.__set_animation(dt, self.frames['down'])
-		if self.direction.y < 0: self.__set_animation(dt, self.frames['up'])
+	def __set_state ( self ):
+		if self.direction.x > 0: self.state = 'right'
+		if self.direction.x < 0: self.state = 'left'
+		if self.direction.y > 0: self.state = 'down'
+		if self.direction.y < 0: self.state = 'up'
+		
 
-	def __move ( self, dt: float, collision_sprites: Group ):
+	def __animate ( self, dt: float ):
+		self.frames_i = self.frames_i + 5 * dt if self.direction else 0
+		self.image = self.frames[self.state][int(self.frames_i) % len(self.frames[self.state])]
+
+	def __move ( self ):
+		self.rect.center = self.hitbox_rect.center
+
+	def __on_collide ( self, dt: float, collision_sprites: Group ):
 		self.hitbox_rect.x += self.direction.x * self.speed * dt
 		self.__collision_handler(collision_sprites, 'horizontal')
 
 		self.hitbox_rect.y += self.direction.y * self.speed * dt
 		self.__collision_handler(collision_sprites, 'vertical')
 
-		self.rect.center = self.hitbox_rect.center
 
 	def update ( self, give_me: dict[str, Any] ):
 		keys = pygame.key.get_pressed()
 		self.__set_direction(keys)
-		self.__lauch_animation(give_me['dt'])
-		self.__move(give_me['dt'], give_me['groups']['collision_sprites'])
+		self.__set_state()
+		self.__animate(give_me['dt'])
+		self.__on_collide(give_me['dt'], give_me['groups']['collision_sprites'])
+		self.__move()
