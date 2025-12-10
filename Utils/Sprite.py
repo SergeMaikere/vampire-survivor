@@ -1,10 +1,9 @@
-from typing import cast
-from pygame import FRect, Surface
+from pygame import Surface, Vector2
 from settings import *
 from pygame.sprite import Group
 
 class Sprite ( pygame.sprite.Sprite ):
-	def __init__(self, group: Group | tuple[Group, ...], image: Surface, **anchor: tuple):
+	def __init__(self, group: Group | tuple[Group, ...], image: Surface, **anchor: tuple[float, float] | Vector2):
 		super().__init__(group)
 		self._og_image = image
 		self.image = self._og_image.copy()

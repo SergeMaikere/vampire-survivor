@@ -4,7 +4,7 @@ from pygame import Surface
 from pygame.key import ScancodeWrapper
 from pygame.sprite import Group
 from Utils.Sprite import Sprite
-from Utils.Helper import split_path
+from Utils.Helper import split_path, get_into_folder
 from Utils.Loader import get_frame, image_loader
 
 class Player ( Sprite ):
@@ -21,7 +21,7 @@ class Player ( Sprite ):
 
 	def __make_player_frames ( self ) -> dict[str, list[Surface]]:
 		frames = {}
-		for root, _directories, files in walk( join('assets', 'images', 'player') ):
+		for root, _directories, files in get_into_folder('assets', 'images', 'player'):
 			if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
 		return frames
 

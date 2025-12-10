@@ -5,8 +5,9 @@ from Entities.Player import Player
 from Utils.All_Sprites import All_Sprites
 from Utils.Sprite import Sprite
 from Utils.Ground import Ground
+from Utils.Gun import Gun
 from Utils.Helper import pipe
-from Utils.Loader import load_map
+from Utils.Loader import load_map, load_image
 from settings import *
 
 class Game ():
@@ -55,9 +56,16 @@ class Game ():
 		if not obj.name == 'Player': return obj
 		self.player = Player(self.all_sprites, (obj.x, obj.y))
 
+	def __make_gun ( self, maps ):
+		Gun( self.all_sprites, self.player )
+		return maps
+
 	def __make_entitites ( self, maps: TiledMap ):
 		for obj in maps.get_layer_by_name('Entities'): 
-			self.__make_player(obj)
+			pipe(
+				self.__make_player,
+				self.__make_gun
+			)(obj)
 		return maps
 
 
@@ -66,7 +74,7 @@ class Game ():
 			self.__make_ground,
 			self.__make_objects,
 			self.__make_invisible_walls,
-			self.__make_entitites
+			self.__make_entitites,
 		)(load_map(join('assets', 'data', 'maps', 'world.tmx')))
 
 

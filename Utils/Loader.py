@@ -1,6 +1,6 @@
 from pytmx import TiledMap
 from settings import *
-from typing import AnyStr, Callable, Iterator
+from typing import Callable
 from pygame.surface import Surface
 from Utils.Helper import pipe, curry
 from pytmx.util_pygame import load_pygame
