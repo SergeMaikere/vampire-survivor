@@ -3,6 +3,7 @@ from typing import Any
 from pygame import Surface, Vector2
 from pygame.sprite import Group
 from Utils.Sprite import Sprite
+from Utils.Bullet import Bullet
 from Entities.Player import Player
 from Utils.Loader import image_loader
 from Utils.Helper import pipe
@@ -27,7 +28,7 @@ class Gun ( Sprite ):
 	def __get_mouse_vector ( self ):
 		return pygame.Vector2( pygame.mouse.get_pos() )
 
-	def __set_player_direction ( self , mouse_position: Vector2):
+	def __set_player_direction ( self , mouse_position: Vector2 ):
 		self.player_direction = (mouse_position - self.player_position).normalize()
 		return self.player_direction
 
@@ -50,9 +51,17 @@ class Gun ( Sprite ):
 			self.__flip_gun,
 		)(self.__get_mouse_vector())
 
+	def __is_player_shooting ( self ):
+		return pygame.mouse.get_just_released()[0]
+
+	def __shoot ( self ):
+		if not self.__is_player_shooting(): return
+		Bullet(self.group, self.rect.midright, self.player_direction)
+
 	def __move ( self ):
 		self.rect.center = self.player.rect.center + self.player_direction * self.player_distance
 
 	def update ( self, give: dict[str, Any] ):
 		self.__image_handler()
+		self.__shoot()
 		self.__move()

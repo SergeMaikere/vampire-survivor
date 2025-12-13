@@ -7,7 +7,7 @@ from Utils.Sprite import Sprite
 from Utils.Ground import Ground
 from Utils.Gun import Gun
 from Utils.Helper import pipe
-from Utils.Loader import load_map, load_image
+from Utils.Loader import load_map
 from settings import *
 
 class Game ():
@@ -57,7 +57,7 @@ class Game ():
 		self.player = Player(self.all_sprites, (obj.x, obj.y))
 
 	def __make_gun ( self, maps ):
-		Gun( self.all_sprites, self.player )
+		self.gun = Gun( self.all_sprites, self.player )
 		return maps
 
 	def __make_entitites ( self, maps: TiledMap ):
