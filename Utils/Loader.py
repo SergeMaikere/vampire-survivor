@@ -1,6 +1,6 @@
 from pytmx import TiledMap
 from settings import *
-from typing import AnyStr, Callable, Iterator
+from typing import Callable
 from pygame.surface import Surface
 from Utils.Helper import pipe, curry
 from pytmx.util_pygame import load_pygame
@@ -12,6 +12,6 @@ convert_image: Callable[ [Surface, bool], Surface ] = lambda image, alpha=True: 
 
 image_loader: Callable[ [str, str], Surface ] = lambda path, filename: pipe( curry(load_image)(path), convert_image )(filename)
 
-load_map: Callable[ [str], TiledMap ] = lambda layer: load_pygame(layer)
+load_map: Callable[ [], TiledMap ] = lambda : load_pygame( join('assets', 'data', 'maps', 'world.tmx') )
 
 get_frame: Callable[ [str, str], Surface ] = lambda path, filename: pipe( curry(load_image)(path), convert_image )(filename)

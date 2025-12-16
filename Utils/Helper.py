@@ -1,6 +1,7 @@
+from Utils.Sprite import Sprite
 from settings import *
 from types import FunctionType
-from typing import Any, Callable, Iterable
+from typing import Any, Callable, Iterable, Iterator
 from functools import reduce
 from inspect import signature
 from pathlib import Path
@@ -20,7 +21,11 @@ def foreach ( func: FunctionType, iter: Iterable ):
 		func(x)
 	return iter
 
+get_into_folder: Callable[ ..., Iterator[tuple[str, list[str], list[str]]] ] = lambda *path: walk(join(*path))
+
 split_path: Callable[ [str], list[str] ] = lambda path: list(Path(path).parts)
+
+
 
 
 
