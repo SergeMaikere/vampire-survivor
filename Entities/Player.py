@@ -25,7 +25,6 @@ class Player ( Sprite ):
 			if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
 		return frames
 
-
 	def __collision_handler ( self, collision_sprites: Group, direction: str ):
 		for sprite in collision_sprites:
 			if sprite.rect.colliderect(self.hitbox_rect):
