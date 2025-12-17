@@ -3,9 +3,7 @@ from pygame import Event
 from settings import *
 from pytmx import TiledMap
 from Entities.Player import Player
-from Entities.Bat import Bat
-from Entities.Blob import Blob
-from Entities.Skeleton import Skeleton
+from Entities.Enemy import Enemy
 from Utils.All_Sprites import All_Sprites
 from Utils.Sprite import Sprite
 from Utils.Ground import Ground
@@ -45,11 +43,7 @@ class Game ():
 
 	def __make_enemy ( self ):
 		type = self.enemy_type[ random.randint(0, len(self.enemy_type) - 1) ]
-		print(type)
-		if type == 'bat': return Bat((self.all_sprites, self.enemy_sprites), self.map)
-		if type == 'blob': return Blob((self.all_sprites, self.enemy_sprites), self.map)
-		if type == 'skeleton': return Skeleton((self.all_sprites, self.enemy_sprites), self.map)
-		raise ValueError('Unknown Enemy type')
+		return Enemy((self.all_sprites, self.enemy_sprites), self.player, self.map, type)
 
 	def __event_loop ( self ) -> None:
 		for event in pygame.event.get():
