@@ -66,9 +66,9 @@ class Player ( Sprite ):
 		self.__collision_handler(collision_sprites, 'vertical')
 
 
-	def update ( self, give_me: dict[str, Any] ):
+	def update ( self, give: dict[str, Any] ):
 		self.__set_direction(pygame.key.get_pressed())
 		self.__set_state()
-		self.__animate(give_me['dt'])
-		self.__on_collide(give_me['dt'], give_me['groups']['collision_sprites'])
+		self.__animate(give['dt'])
+		self.__on_collide(give['dt'], give['groups']['collision_sprites'])
 		self.__move()
