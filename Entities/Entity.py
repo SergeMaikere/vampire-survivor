@@ -13,30 +13,30 @@ class Entity ( Sprite ):
 		self.speed = 100
 		self.direction = pygame.Vector2()
 
-		self._path: list[str] = []
-		self.frames_i = 0
-		self.frames = {}
-		self.state: str = 'state'
+	# 	self._path: list[str] = []
+	# 	self.frames_i = 0
+	# 	self.frames = {}
+	# 	self.state: str = 'state'
 
-	@property
-	def path ( self ):
-		return self._path
+	# @property
+	# def path ( self ):
+	# 	return self._path
 
-	@path.setter
-	def path ( self, value: list[str] ):
-		self._path = value
-		self.frames = self.__make_player_frames()
+	# @path.setter
+	# def path ( self, value: list[str] ):
+	# 	self._path = value
+	# 	self.frames = self.__make_player_frames()
 
-	def __make_player_frames ( self ) -> dict[str, list[Surface]]:
-		frames = {}
-		for root, _directories, files in get_into_folder(*self._path):
-			if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
-		return frames
+	# def __make_player_frames ( self ) -> dict[str, list[Surface]]:
+	# 	frames = {}
+	# 	for root, _directories, files in get_into_folder(*self._path):
+	# 		if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
+	# 	return frames
 
 	
-	def _animate ( self, dt: float ):
-		self.frames_i += dt * 5 
-		self.image = self.frames[self.state][int(self.frames_i) % len(self.frames[self.state])]
+	# def _animate ( self, dt: float ):
+	# 	self.frames_i += dt * 5 
+	# 	self.image = self.frames[self.state][int(self.frames_i) % len(self.frames[self.state])]
 
 
 	def _collision_handler ( self, collision_sprites: Group, direction: str ):

@@ -9,8 +9,8 @@ from Utils.Sprite import Sprite
 from Utils.Ground import Ground
 from Utils.Gun import Gun
 from Utils.Helper import pipe
-from Utils.Loader import load_map
-import random
+from Utils.Loader import load_map, load_frames
+from random import randint
 
 class Game ():
 
@@ -25,6 +25,7 @@ class Game ():
 		self.collision_sprites = pygame.sprite.Group()
 		self.enemy_sprites = pygame.sprite.Group()
 		
+		self.enemy_frames = load_frames('assets', 'images', 'enemies')
 		self.spawn_enemy = pygame.event.custom_type()
 		self.enemy_type = [ 'bat', 'blob', 'skeleton' ]
 
@@ -42,8 +43,8 @@ class Game ():
 		return event.type == pygame.QUIT
 
 	def __make_enemy ( self ):
-		type = self.enemy_type[ random.randint(0, len(self.enemy_type) - 1) ]
-		return Enemy((self.all_sprites, self.enemy_sprites), self.player, self.map, type)
+		type = self.enemy_type[ randint(0, len(self.enemy_type) - 1) ]
+		return Enemy((self.all_sprites, self.enemy_sprites), self.player, self.map, type, self.enemy_frames[type])
 
 	def __event_loop ( self ) -> None:
 		for event in pygame.event.get():
