@@ -8,11 +8,11 @@ from Utils.Loader import image_loader
 from Utils.Helper import get_random_pos
 
 class Enemy ( Entity ):
-	def __init__(self, group: Group | tuple[Group, ...], player: Player, dimensions: tuple[float, float], type: str, frames: list[Surface]):
+	def __init__(self, group: Group | tuple[Group, ...], player: Player, pos: tuple[float, float], type: str, frames: list[Surface]):
 		super().__init__(
 			group, 
 			image_loader(join('assets', 'images', 'enemies', type), '0.png'), 
-			center = get_random_pos(dimensions[0], dimensions[1])
+			center = pos
 		)
 		self.player = player
 		self.frames, self.frames_i = frames, 0

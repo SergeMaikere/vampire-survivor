@@ -1,7 +1,7 @@
 from typing import Any
 from pygame import Event
 from settings import *
-from pytmx import TiledMap
+from pytmx import TiledMap, TiledObject
 from Entities.Player import Player
 from Entities.Enemy import Enemy
 from Utils.All_Sprites import All_Sprites
@@ -10,7 +10,7 @@ from Utils.Ground import Ground
 from Utils.Gun import Gun
 from Utils.Helper import pipe
 from Utils.Loader import load_map, load_frames
-from random import randint
+from random import choice, randint
 
 class Game ():
 
@@ -26,8 +26,8 @@ class Game ():
 		self.enemy_sprites = pygame.sprite.Group()
 		
 		self.enemy_frames = load_frames('assets', 'images', 'enemies')
-		self.spawn_enemy = pygame.event.custom_type()
 		self.enemy_type = [ 'bat', 'blob', 'skeleton' ]
+		self.enemies_positions = []
 
 		self.give_me: dict[str, Any] = { 
 			'groups': {
@@ -44,16 +44,12 @@ class Game ():
 
 	def __make_enemy ( self ):
 		type = self.enemy_type[ randint(0, len(self.enemy_type) - 1) ]
-		return Enemy((self.all_sprites, self.enemy_sprites), self.player, self.map, type, self.enemy_frames[type])
+		return Enemy((self.all_sprites, self.enemy_sprites), self.player, choice(self.enemies_positions), type, self.enemy_frames[type])
 
 	def __event_loop ( self ) -> None:
 		for event in pygame.event.get():
 			self.running = not self.__time_to_quit(event)
 			if event.type == self.spawn_enemy: self.__make_enemy()
-
-	def __set_map_dimensions ( self, maps: TiledMap ):
-		self.map = ( maps.width * TILE_SIZE, maps.height * TILE_SIZE )
-		return maps
 
 	def __make_ground ( self, maps: TiledMap ):
 		for x, y, image in maps.get_layer_by_name('Ground').tiles():
@@ -70,25 +66,36 @@ class Game ():
 			Sprite( self.collision_sprites, pygame.Surface((obj.width, obj.height)), topleft=(obj.x, obj.y) )
 		return maps
 
-	def __make_player ( self, maps: TiledMap ):
+	def __make_player ( self, obj: TiledObject ):
+		if obj.name == 'Player': self.player = Player(self.all_sprites, (obj.x, obj.y))
+		return obj
+
+	def __get_enemy_positions ( self, obj: TiledObject ):
+		if obj.name == 'Enemy': self.enemies_positions.append( (obj.x, obj.y) )
+		return obj
+
+
+	def __set_entities ( self, maps: TiledMap ):
 		for obj in maps.get_layer_by_name('Entities'): 
-			if not obj.name == 'Player': return obj
-			self.player = Player(self.all_sprites, (obj.x, obj.y))
+			pipe(
+				self.__make_player,
+				self.__get_enemy_positions
+			)(obj)
 		return maps
 
 	def __setup_map ( self ):
 		return pipe(
-			self.__set_map_dimensions,
 			self.__make_ground,
 			self.__make_objects,
 			self.__make_invisible_walls,
-			self.__make_player,
+			self.__set_entities,
 		)(load_map())
 
 	def __make_gun ( self ):
 		self.gun = Gun( self.all_sprites, self.player )
 
 	def __set_enemy_spawn_event ( self ):
+		self.spawn_enemy = pygame.event.custom_type()
 		pygame.time.set_timer(self.spawn_enemy, 500)
 
 	def run ( self ):
