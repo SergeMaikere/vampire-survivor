@@ -24,6 +24,7 @@ class Game ():
 		self.all_sprites = All_Sprites()
 		self.collision_sprites = pygame.sprite.Group()
 		self.enemy_sprites = pygame.sprite.Group()
+		self.bullet_sprites = pygame.sprite.Group()
 		
 		self.enemy_frames = load_frames('assets', 'images', 'enemies')
 		self.enemy_type = [ 'bat', 'blob', 'skeleton' ]
@@ -32,7 +33,8 @@ class Game ():
 		self.give_me: dict[str, Any] = { 
 			'groups': {
 				'all_sprites': self.all_sprites, 
-				'collision_sprites': self.collision_sprites
+				'collision_sprites': self.collision_sprites,
+				'enemy_sprites': self.enemy_sprites
 			}
 		}
 
@@ -44,7 +46,13 @@ class Game ():
 
 	def __make_enemy ( self ):
 		type = self.enemy_type[ randint(0, len(self.enemy_type) - 1) ]
-		return Enemy((self.all_sprites, self.enemy_sprites), self.player, choice(self.enemies_positions), type, self.enemy_frames[type])
+		return Enemy(
+			(self.all_sprites, self.enemy_sprites), 
+			self.player, 
+			choice(self.enemies_positions), 
+			type, 
+			self.enemy_frames[type]
+		)
 
 	def __event_loop ( self ) -> None:
 		for event in pygame.event.get():
@@ -97,6 +105,8 @@ class Game ():
 	def __set_enemy_spawn_event ( self ):
 		self.spawn_enemy = pygame.event.custom_type()
 		pygame.time.set_timer(self.spawn_enemy, 500)
+
+	
 
 	def run ( self ):
 		self.__setup_map()

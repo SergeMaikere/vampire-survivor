@@ -5,7 +5,6 @@ from Entities.Player import Player
 from Entities.Entity import Entity
 from settings import *
 from Utils.Loader import image_loader
-from Utils.Helper import get_random_pos
 
 class Enemy ( Entity ):
 	def __init__(self, group: Group | tuple[Group, ...], player: Player, pos: tuple[float, float], type: str, frames: list[Surface]):
