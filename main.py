@@ -29,20 +29,24 @@ class Game ():
 		self.enemy_frames = load_frames('assets', 'images', 'enemies')
 		self.enemy_type = [ 'bat', 'blob', 'skeleton' ]
 		self.enemies_positions = []
+		self.spawn_enemy = pygame.event.custom_type()
+		
+		self.game_over = pygame.event.custom_type()
 
 		self.give_me: dict[str, Any] = { 
 			'groups': {
 				'all_sprites': self.all_sprites, 
 				'collision_sprites': self.collision_sprites,
 				'enemy_sprites': self.enemy_sprites
-			}
+			},
+			'events': { 'game_over': self.game_over }
 		}
 
 		self.running = True
 
 
 	def __time_to_quit ( self, event: Event ):
-		return event.type == pygame.QUIT
+		return event.type == pygame.QUIT or event.type == self.game_over
 
 	def __make_enemy ( self ):
 		type = self.enemy_type[ randint(0, len(self.enemy_type) - 1) ]
@@ -103,7 +107,6 @@ class Game ():
 		self.gun = Gun( self.all_sprites, self.player )
 
 	def __set_enemy_spawn_event ( self ):
-		self.spawn_enemy = pygame.event.custom_type()
 		pygame.time.set_timer(self.spawn_enemy, 500)
 
 	
