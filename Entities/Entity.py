@@ -8,7 +8,7 @@ class Entity ( Sprite ):
 		super().__init__(group, image, **anchor)
 
 		self.hitbox_rect = self.rect.inflate(-50, -50)
-		self.speed = 100
+		self.speed = 50
 		self.direction = pygame.Vector2()
 
 

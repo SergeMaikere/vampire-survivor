@@ -24,7 +24,7 @@ class Bullet ( Sprite ):
 
 	def __kill_enemy ( self, sprite: Enemy ):
 		self.kill()
-		sprite.kill()
+		sprite.die()
 
 
 	def __on_collide_with_enemy ( self, sprites: Group ):
