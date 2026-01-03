@@ -17,9 +17,9 @@ class Game ():
 	def __init__( self ) -> None:
 		pygame.init()
 		pygame.display.set_caption('Vampire Survivor II: Back for Blood!')
+		self.screen_image = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
      
 		self.clock = pygame.time.Clock()
-		self.screen_image = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 		
 		self.all_sprites = All_Sprites()
 		self.collision_sprites = pygame.sprite.Group()

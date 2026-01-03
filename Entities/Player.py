@@ -69,8 +69,8 @@ class Player ( Sprite ):
 		pygame.event.post(pygame.event.Event(game_over))
 
 	def __on_collide_with_enemy ( self, enemy_sprites: Group, game_over: int ):
-		for sprite in enemy_sprites:
-			if sprite.rect.colliderect(self.rect): self.__game_over(game_over)
+		if pygame.sprite.spritecollide(self, enemy_sprites, True, pygame.sprite.collide_mask): 
+			self.__game_over(game_over)
 
 	def update ( self, give: dict[str, Any] ):
 		self.__set_direction(pygame.key.get_pressed())
