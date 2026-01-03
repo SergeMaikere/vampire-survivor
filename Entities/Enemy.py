@@ -19,7 +19,7 @@ class Enemy ( Entity ):
 
 		self.frames, self.frames_i = frames, 0
 
-		self.death_delay = 150
+		self.death_delay = 400
 		self.time_of_death = 0
 
 	def __get_direction ( self ):
