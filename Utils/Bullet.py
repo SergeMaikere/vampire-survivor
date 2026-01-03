@@ -27,7 +27,7 @@ class Bullet ( Sprite ):
 
 	def __make_impact_sound ( self ):
 		self.impact_sound.play()
-		self.impact_sound.set_volume(0.8)
+		self.impact_sound.set_volume(0.5)
 
 
 	def __kill_enemy ( self, sprite: Enemy ):
