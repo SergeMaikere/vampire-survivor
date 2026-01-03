@@ -34,6 +34,8 @@ class Game ():
 		self.game_over = pygame.event.custom_type()
 
 		self.soundtrack = load_sound('music.wav')
+		self.gunshot_sound = load_sound('shoot.wav')
+		self.impact_sound = load_sound('impact.ogg')
 
 		self.give_me: dict[str, Any] = { 
 			'groups': {
@@ -106,7 +108,7 @@ class Game ():
 		)(load_map())
 
 	def __make_gun ( self ):
-		self.gun = Gun( self.all_sprites, self.player )
+		self.gun = Gun( self.all_sprites, self.player, self.gunshot_sound, self.impact_sound )
 
 	def __set_enemy_spawn_event ( self ):
 		pygame.time.set_timer(self.spawn_enemy, 500)
