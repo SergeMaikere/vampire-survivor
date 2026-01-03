@@ -18,8 +18,8 @@ class Player ( Entity ):
 		self.frames = load_frames( join('assets', 'images', 'player') )
 
 	def __set_direction( self, keys: ScancodeWrapper ):
-		self.direction.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
-		self.direction.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
+		self.direction.x = int(keys[pygame.K_f]) - int(keys[pygame.K_s])
+		self.direction.y = int(keys[pygame.K_d]) - int(keys[pygame.K_e])
 		self.direction = self.direction.normalize() if self.direction else self.direction
 
 

@@ -115,13 +115,21 @@ class Game ():
 
 	def __set_soundtrack ( self ):
 		self.soundtrack.play(loops=-1)
-		self.soundtrack.set_volume(0.4)
+
+	def __set_sound_volumes ( self ):
+		self.soundtrack.set_volume(0.3)
+		self.gunshot_sound.set_volume(0.4)
+		self.impact_sound.set_volume(0.4)
+
+	def __sound_handler ( self ):
+		self.__set_soundtrack()
+		self.__set_sound_volumes()
 
 	def run ( self ):
 		self.__setup_map()
 		self.__make_gun()
 		self.__set_enemy_spawn_event()
-		self.__set_soundtrack()
+		self.__sound_handler()
 		
 		while self.running:
 			self.give_me['dt'] = self.clock.tick() / 1000
