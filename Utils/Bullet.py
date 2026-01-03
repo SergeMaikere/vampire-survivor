@@ -36,9 +36,10 @@ class Bullet ( Sprite ):
 		self.__make_impact_sound()
 
 
-	def __on_collide_with_enemy ( self, sprites: Group ):
-		for sprite in sprites:
-			if sprite.rect.colliderect(self.rect): self.__kill_enemy(sprite)
+	def __on_collide_with_enemy ( self, enemy_sprites: Group ):
+		sprites = pygame.sprite.spritecollide(self, enemy_sprites, True)
+		for sprite in sprites: 
+			self.__kill_enemy(sprite)
 
 
 	def update ( self, give: dict[str, Any] ):
