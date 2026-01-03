@@ -1,17 +1,17 @@
 from settings import *
 from typing import Any
-from pygame import Surface, Vector2
+from pygame import Sound, Surface, Vector2
 from pygame.sprite import Group
 from Utils.Sprite import Sprite
 from Utils.Bullet import Bullet
 from Entities.Player import Player
-from Utils.Loader import image_loader
+from Utils.Loader import image_loader, load_sound
 from Utils.Helper import pipe
 from math import atan2, degrees
 
 
 class Gun ( Sprite ):
-	def __init__(self, group: Group | tuple[Group, ...], player: Player):
+	def __init__(self, group: Group | tuple[Group, ...], player: Player, gunshot_sound: Sound, impact_sound: Sound):
 
 		self.player = player
 		self.player_position = pygame.Vector2( (WINDOW_WIDTH/2, WINDOW_HEIGHT/2) )
@@ -21,6 +21,8 @@ class Gun ( Sprite ):
 		self.can_shoot = True
 		self.cooldown = 100
 		self.last_shot = 0
+
+		self.gunshot_sound, self.impact_sound = gunshot_sound, impact_sound
 
 		super().__init__(
 			group, 
@@ -62,10 +64,14 @@ class Gun ( Sprite ):
 		return self.rect.center + self.player_direction * 60
 
 	def __make_bullet ( self, v: Vector2 ):
-		return Bullet(self.group, (v.x, v.y) , self.player_direction)
+		return Bullet(self.group, (v.x, v.y) , self.player_direction, self.impact_sound)
 
 	def __cooldown_handler ( self ):
 		if pygame.time.get_ticks() - self.last_shot >= self.cooldown: self.can_shoot = True
+
+	def __make_gunshot_sound ( self ):
+		self.gunshot_sound.play()
+		self.gunshot_sound.set_volume(0.6)
 
 	def __start_cooldown ( self ):
 		self.can_shoot = False
@@ -74,6 +80,7 @@ class Gun ( Sprite ):
 	def __shoot ( self ):
 		if self.__is_player_shooting() and self.can_shoot: 
 			self.__make_bullet(self.__get_bulet_position())
+			self.__make_gunshot_sound()
 			self.__start_cooldown()
 
 	def __move ( self ):
