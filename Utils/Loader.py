@@ -1,3 +1,4 @@
+from pygame import Sound
 from pytmx import TiledMap
 from settings import *
 from typing import Callable
@@ -5,6 +6,8 @@ from pygame.surface import Surface
 from Utils.Helper import pipe, curry, get_into_folder, split_path
 from pytmx.util_pygame import load_pygame
 
+
+load_sound: Callable[ [str], Sound ] = lambda filename: pygame.mixer.Sound( join('assets', 'audio', filename) )
 
 load_image: Callable[ [str, str], Surface ] = lambda path, filename: pygame.image.load( join(path, filename) )
 
@@ -21,3 +24,4 @@ def load_frames ( *path: str ) -> dict[str, list[Surface]]:
 	for root, _directories, files in get_into_folder(*path):
 		if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
 	return frames
+

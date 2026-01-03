@@ -9,7 +9,7 @@ from Utils.Sprite import Sprite
 from Utils.Ground import Ground
 from Utils.Gun import Gun
 from Utils.Helper import pipe
-from Utils.Loader import load_map, load_frames
+from Utils.Loader import load_map, load_frames, load_sound
 from random import choice, randint
 
 class Game ():
@@ -32,6 +32,8 @@ class Game ():
 		self.spawn_enemy = pygame.event.custom_type()
 		
 		self.game_over = pygame.event.custom_type()
+
+		self.soundtrack = load_sound('music.wav')
 
 		self.give_me: dict[str, Any] = { 
 			'groups': {
@@ -109,12 +111,15 @@ class Game ():
 	def __set_enemy_spawn_event ( self ):
 		pygame.time.set_timer(self.spawn_enemy, 500)
 
-	
+	def __set_soundtrack ( self ):
+		self.soundtrack.play(loops=-1)
+		self.soundtrack.set_volume(0.4)
 
 	def run ( self ):
 		self.__setup_map()
 		self.__make_gun()
 		self.__set_enemy_spawn_event()
+		self.__set_soundtrack()
 		
 		while self.running:
 			self.give_me['dt'] = self.clock.tick() / 1000
