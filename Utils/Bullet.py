@@ -23,7 +23,7 @@ class Bullet ( Sprite ):
 
 	def __die_of_screen ( self ):
 		current = pygame.time.get_ticks()
-		if current - self.time_of_birth >= self.expiration_time : self.kill()
+		if current - self.time_of_birth >= self.expiration_time: self.kill()
 
 	def __make_impact_sound ( self ):
 		self.impact_sound.play()
@@ -32,14 +32,13 @@ class Bullet ( Sprite ):
 
 	def __kill_enemy ( self, sprite: Enemy ):
 		self.kill()
-		sprite.die()
 		self.__make_impact_sound()
+		sprite.die()
 
 
 	def __on_collide_with_enemy ( self, enemy_sprites: Group ):
 		sprites = pygame.sprite.spritecollide(self, enemy_sprites, True)
-		for sprite in sprites: 
-			self.__kill_enemy(sprite)
+		for sprite in sprites: self.__kill_enemy(sprite)
 
 
 	def update ( self, give: dict[str, Any] ):

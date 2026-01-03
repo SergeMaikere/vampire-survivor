@@ -1,13 +1,11 @@
 from settings import *
 from typing import Any
-from pygame import Event, Surface, event
 from pygame.key import ScancodeWrapper
 from pygame.sprite import Group
-from Utils.Sprite import Sprite
-from Utils.Helper import split_path, get_into_folder
-from Utils.Loader import get_frame, image_loader
+from Entities.Entity import Entity
+from Utils.Loader import image_loader, load_frames
 
-class Player ( Sprite ):
+class Player ( Entity ):
 	def __init__( self, group: Group, pos: tuple[float, float] ):
 		super().__init__(group, image_loader(join('assets', 'images', 'player', 'down'), '0.png'), center=pos)
 
@@ -17,26 +15,7 @@ class Player ( Sprite ):
 
 		self.state = 'down'
 		self.frames_i = 0
-		self.frames = self.__make_player_frames()
-
-	def __make_player_frames ( self ) -> dict[str, list[Surface]]:
-		frames = {}
-		for root, _directories, files in get_into_folder('assets', 'images', 'player'):
-			if files: frames[ split_path(root).pop() ] = [ get_frame(root, file) for file in files ]
-		return frames
-
-	def __collision_handler ( self, collision_sprites: Group, direction: str ):
-		for sprite in collision_sprites:
-			if sprite.rect.colliderect(self.hitbox_rect):
-
-				if direction == 'horizontal':
-					if self.direction.x > 0: self.hitbox_rect.right = sprite.rect.left
-					if self.direction.x < 0: self.hitbox_rect.left = sprite.rect.right
-
-				if direction == 'vertical':
-					if self.direction.y > 0: self.hitbox_rect.bottom = sprite.rect.top
-					if self.direction.y < 0: self.hitbox_rect.top = sprite.rect.bottom
-
+		self.frames = load_frames( join('assets', 'images', 'player') )
 
 	def __set_direction( self, keys: ScancodeWrapper ):
 		self.direction.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
@@ -55,16 +34,6 @@ class Player ( Sprite ):
 		self.frames_i = self.frames_i + 5 * dt if self.direction else 0
 		self.image = self.frames[self.state][int(self.frames_i) % len(self.frames[self.state])]
 
-	def __move ( self ):
-		self.rect.center = self.hitbox_rect.center
-
-	def __on_collide ( self, dt: float, collision_sprites: Group ):
-		self.hitbox_rect.x += self.direction.x * self.speed * dt
-		self.__collision_handler(collision_sprites, 'horizontal')
-
-		self.hitbox_rect.y += self.direction.y * self.speed * dt
-		self.__collision_handler(collision_sprites, 'vertical')
-
 	def __game_over ( self, game_over: int ):
 		pygame.event.post(pygame.event.Event(game_over))
 
@@ -76,6 +45,6 @@ class Player ( Sprite ):
 		self.__set_direction(pygame.key.get_pressed())
 		self.__set_state()
 		self.__animate(give['dt'])
-		self.__on_collide(give['dt'], give['groups']['collision_sprites'])
+		self._on_collide(give['dt'], give['groups']['collision_sprites'])
 		self.__on_collide_with_enemy(give['groups']['enemy_sprites'], give['events']['game_over'])
-		self.__move()
+		self._move()

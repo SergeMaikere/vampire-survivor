@@ -7,7 +7,7 @@ class Entity ( Sprite ):
 	def __init__(self, group: Group | tuple[Group, ...], image: Surface, **anchor: tuple[float, float] | Vector2):
 		super().__init__(group, image, **anchor)
 
-		self.hitbox_rect = self.rect.inflate(-50, -50)
+		self.hitbox_rect = self.rect.inflate(0, -50)
 		self.speed = 50
 		self.direction = pygame.Vector2()
 
