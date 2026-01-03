@@ -5,7 +5,7 @@ from pygame.sprite import Group
 from Utils.Sprite import Sprite
 from Utils.Bullet import Bullet
 from Entities.Player import Player
-from Utils.Loader import image_loader
+from Utils.Loader import image_loader, load_sound
 from Utils.Helper import pipe
 from math import atan2, degrees
 
@@ -21,6 +21,8 @@ class Gun ( Sprite ):
 		self.can_shoot = True
 		self.cooldown = 100
 		self.last_shot = 0
+
+		self.gunshot_sound = load_sound('shoot.wav')
 
 		super().__init__(
 			group, 
@@ -67,6 +69,10 @@ class Gun ( Sprite ):
 	def __cooldown_handler ( self ):
 		if pygame.time.get_ticks() - self.last_shot >= self.cooldown: self.can_shoot = True
 
+	def __make_gunshot_sound ( self ):
+		self.gunshot_sound.play()
+		self.gunshot_sound.set_volume(0.6)
+
 	def __start_cooldown ( self ):
 		self.can_shoot = False
 		self.last_shot = pygame.time.get_ticks()
@@ -74,6 +80,7 @@ class Gun ( Sprite ):
 	def __shoot ( self ):
 		if self.__is_player_shooting() and self.can_shoot: 
 			self.__make_bullet(self.__get_bulet_position())
+			self.__make_gunshot_sound()
 			self.__start_cooldown()
 
 	def __move ( self ):
