@@ -3,6 +3,7 @@ from pygame import Vector2
 from pygame.sprite import Group
 from settings import *
 from Utils.Sprite import Sprite
+from Entities.Enemy import Enemy
 from Utils.Loader import image_loader
 
 class Bullet ( Sprite ):
@@ -21,6 +22,17 @@ class Bullet ( Sprite ):
 		current = pygame.time.get_ticks()
 		if current - self.time_of_birth >= self.expiration_time : self.kill()
 
+	def __kill_enemy ( self, sprite: Enemy ):
+		self.kill()
+		sprite.die()
+
+
+	def __on_collide_with_enemy ( self, sprites: Group ):
+		for sprite in sprites:
+			if sprite.rect.colliderect(self.rect): self.__kill_enemy(sprite)
+
+
 	def update ( self, give: dict[str, Any] ):
-		self.__move(give['dt'])
 		self.__die_of_screen()
+		self.__on_collide_with_enemy(give['groups']['enemy_sprites'])
+		self.__move(give['dt'])

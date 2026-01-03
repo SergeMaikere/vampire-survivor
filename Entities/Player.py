@@ -1,6 +1,6 @@
 from settings import *
 from typing import Any
-from pygame import Surface
+from pygame import Event, Surface, event
 from pygame.key import ScancodeWrapper
 from pygame.sprite import Group
 from Utils.Sprite import Sprite
@@ -65,10 +65,17 @@ class Player ( Sprite ):
 		self.hitbox_rect.y += self.direction.y * self.speed * dt
 		self.__collision_handler(collision_sprites, 'vertical')
 
+	def __game_over ( self, game_over: int ):
+		pygame.event.post(pygame.event.Event(game_over))
+
+	def __on_collide_with_enemy ( self, enemy_sprites: Group, game_over: int ):
+		for sprite in enemy_sprites:
+			if sprite.rect.colliderect(self.rect): self.__game_over(game_over)
 
 	def update ( self, give: dict[str, Any] ):
 		self.__set_direction(pygame.key.get_pressed())
 		self.__set_state()
 		self.__animate(give['dt'])
 		self.__on_collide(give['dt'], give['groups']['collision_sprites'])
+		self.__on_collide_with_enemy(give['groups']['enemy_sprites'], give['events']['game_over'])
 		self.__move()
