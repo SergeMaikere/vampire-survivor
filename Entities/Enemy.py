@@ -19,7 +19,7 @@ class Enemy ( Entity ):
 
 		self.frames, self.frames_i = frames, 0
 
-		self.death_delay = 150
+		self.death_delay = 400
 		self.time_of_death = 0
 
 	def __get_direction ( self ):
@@ -37,6 +37,8 @@ class Enemy ( Entity ):
 	def __set_death_frame ( self ):
 		mask = pygame.mask.from_surface(self.image)
 		self.image = mask.to_surface(setcolor=(255,255,255,255), unsetcolor=(0,0,0,0))
+		print(self.time_of_death, 'time_of_death')
+		print(self.is_shot, 'is_shot')
 
 
 	def __wait_to_die ( self ):
@@ -49,7 +51,7 @@ class Enemy ( Entity ):
 		self.__set_death_frame()
 
 	def update ( self, give: dict[str, Any] ):
-		if self.is_shot: return self.__wait_to_die()
+		if self.is_shot: self.__wait_to_die()
 
 		self.__get_direction()
 		self._animate(give['dt'])
